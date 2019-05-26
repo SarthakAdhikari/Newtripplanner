@@ -5,6 +5,9 @@ import router from './router'
 import store from './store'
 
 import "@/design/main.scss"
+import Wave from "./components/shared/Wave.vue"
+
+Vue.component('appWave', Wave)
 
 Vue.config.productionTip = false
 

@@ -14,20 +14,7 @@
         </h1>
       </div>
     </div>
-    <svg width="100%" height="150" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path fill="#DADEDF">
-        <animate
-          repeatCount="indefinite"
-          fill="freeze"
-          dur="10s"
-          attributeName="d"
-          values="M0 31.5027C516 -109.497 909.243 283.432 1440 31.5027V181.503H0V31.5027Z;
-                M0 21.5027C516 -9.497 809.243 283.432 1440 31.5027V181.503H0V31.5027Z;
-                M0 76.5021C815 346.5 1030 -189.5 1440 76.5021V226.502H0V76.5021Z;
-                M0 31.5027C516 -109.497 909.243 283.432 1440 31.5027V181.503H0V31.5027Z"
-        ></animate>
-      </path>
-    </svg>
+    <app-wave fillColor="#DADEDF"></app-wave>
   </section>
 </template>
 
@@ -77,12 +64,6 @@ section.hero {
         }
       }
     }
-  }
-
-  svg {
-    position: absolute;
-    bottom: 0;
-    left: 0;
   }
 }
 

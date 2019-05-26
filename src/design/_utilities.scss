@@ -8,6 +8,14 @@
 .text-center {
   text-align: center;
 }
+.section__title {
+  margin-bottom: 4rem;
+}
+ul {
+  list-style: none;
+  padding: 0;
+}
+
 .grey-text {
   color: #6f7c80;
 }
@@ -19,14 +27,17 @@
   text-align: center;
 
   background: linear-gradient(124.85deg, #14f1d9 0%, #3672f8 100%), blue;
+  -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
+.heading-lg {
+  font-size: 4rem;
+}
 
 @media screen and (max-width: 400px) {
   .row {
-    padding: 0 .5rem;
+    padding: 0 0.5rem;
   }
 }
-

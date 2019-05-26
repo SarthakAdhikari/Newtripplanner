@@ -8,7 +8,12 @@
           </div>
           <div>
             <ul class="nav--items">
-              <router-link class="nav__item" v-for="(menu, index) of menuItems" :key="index" :to="menu.to">{{ menu.title }}</router-link>
+              <router-link
+                class="nav__item"
+                v-for="(menu, index) of menuItems"
+                :key="index"
+                :to="menu.to"
+              >{{ menu.title }}</router-link>
             </ul>
           </div>
         </div>
@@ -38,7 +43,7 @@ export default {
   position: fixed;
   width: 100%;
   z-index: 100;
-  box-shadow: 0 1.5rem 3rem rgba($black, .5);
+  box-shadow: 0 1.5rem 3rem rgba($black, 0.5);
 
   nav {
     .nav-container {
@@ -64,4 +69,23 @@ export default {
     }
   }
 }
+
+@media screen and (max-width: 700px) {
+  .header {
+
+    nav {
+      .nav-container {
+        display: block;
+
+        div {
+          .nav--items {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+}
 </style>
+
+
