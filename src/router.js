@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Home from './views/Home.vue'
 import Myplans from './views/Myplans.vue'
 import LoginSingin from './views/LoginSignin.vue'
+import Forum from './views/Forum.vue'
 
 Vue.use(Router)
 
@@ -12,6 +13,7 @@ export default new Router({
   routes: [
     { path: '/', name: 'Home', component: Home},
     { path: '/myplans', name: 'My plans', component: Myplans},
+    { path: '/forum', name: 'Forum', component: Forum},
     { path: '/login-signin', name: 'Login / Sign in', component: LoginSingin},
   ]
 })

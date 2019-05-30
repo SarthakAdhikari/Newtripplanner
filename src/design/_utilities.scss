@@ -1,6 +1,6 @@
 /* Utitlity Classes */
 .row {
-  max-width: 1140px;
+  max-width: 114rem;
   margin: 0 auto;
   padding: 0 1rem;
 }
@@ -32,8 +32,10 @@ ul {
   color: transparent;
 }
 
-.heading-lg {
-  font-size: 4rem;
+.heading-lg { font-size: 4rem; }
+
+@media screen and (max-width: 600px) {
+  .heading-lg { font-size: 3rem; }
 }
 
 @media screen and (max-width: 400px) {

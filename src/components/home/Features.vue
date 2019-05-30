@@ -39,19 +39,23 @@ export default {
   position: relative;
 
   .features__list {
-    display: grid;
-    grid-gap: 3rem;
-    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
     position: relative;
     z-index: 10;
 
     .feature {
       background: $white;
-      padding: 4rem;
+      padding: 2rem;
+      width: 22rem;
+      height: 22rem;
+
       display: flex;
       justify-content: center;
       align-items: center;
       flex-direction: column;
+      
       border-radius: 2rem;
       box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
       transition: transform 0.3s ease-out;
@@ -70,7 +74,18 @@ export default {
   }
 }
 
-@media screen and (max-width: 926px) {
+@media screen and (max-width: 1080px) {
+  .features {
+    .features__list {
+      .feature {
+        width: 20rem;
+        height: 20rem;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 870px) {
   .features {
     .features__list {
       .feature:last-child {
@@ -80,11 +95,13 @@ export default {
   }
 }
 
-@media screen and (max-width: 696px) {
+@media screen and (max-width: 670px) {
   .features {
     .features__list {
-      .feature:last-child {
-        display: block;
+      flex-direction: column;
+      align-items: center;
+      .feature:not(:last-child) {
+        margin-bottom: 3rem;
       }
     }
   }

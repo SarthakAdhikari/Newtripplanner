@@ -25,10 +25,9 @@ export default {
 
 <style lang="scss" scoped>
 #form {
-  position: absolute;
-  bottom: 10rem;
   z-index: 10;
-  padding: 2rem;
+  position: relative;
+  padding: 4rem 2rem;
   width: 35rem;
   background: rgba(255, 255, 255, 0.9);
   border-radius: 2rem;

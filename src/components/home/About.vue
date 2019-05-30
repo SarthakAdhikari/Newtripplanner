@@ -47,7 +47,7 @@
 
     display: grid;
     grid-gap: 5rem;
-    grid-template-columns: 250px 1fr;
+    grid-template-columns: 280px 1fr;
 
     .about__img img {
       width: 100%;

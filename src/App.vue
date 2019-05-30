@@ -1,14 +1,12 @@
 <template>
   <v-app>
-    <header>
+    <div class="grid--layout">
       <app-header></app-header>
-    </header>
-    <main>
-      <router-view></router-view>
-    </main>
-    <footer>
+      <main>
+        <router-view></router-view>
+      </main>
       <app-footer></app-footer>
-    </footer>
+    </div>
   </v-app>
 </template>
 
@@ -21,18 +19,23 @@ export default {
   components: {
     appHeader: Header,
     appFooter: Footer
-  },
-  data() {
-    return {
-      //
-    };
   }
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+.grid--layout {
+  display: grid;
+  grid-template-rows: auto fit-content(8rem);
+  grid-template-areas: "main"
+                       "footer";
+}
 
-
+main {
+  grid-area: main;
+  margin-top: 6rem;
+}
+footer { grid-area: footer; }
 </style>
 
 

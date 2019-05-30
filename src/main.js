@@ -9,6 +9,9 @@ import Wave from "./components/shared/Wave.vue"
 
 Vue.component('appWave', Wave)
 
+import VueParticles from 'vue-particles'
+Vue.use(VueParticles)
+
 Vue.config.productionTip = false
 
 new Vue({

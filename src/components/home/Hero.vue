@@ -48,6 +48,7 @@ section.hero {
 
     .hero-text {
       color: $light-grey;
+      margin-top: -20rem;
 
       .heading-primary {
         font-family: "Roboto", sans-serif;
@@ -113,10 +114,6 @@ section.hero {
 @media screen and (max-width: 600px) {
   section.hero {
     .hero-container {
-      
-      .form-container {
-        display: none;
-      }
 
       .hero-text {
         .heading-primary {
@@ -136,11 +133,7 @@ section.hero {
 @media screen and (max-width: 470px) {
   section.hero {
     .hero-container {
-      
-      .form-container {
-        display: none;
-      }
-
+    
       .hero-text {
         .heading-primary {
           &__main {
@@ -160,10 +153,6 @@ section.hero {
   section.hero {
     .hero-container {
       
-      .form-container {
-        display: none;
-      }
-
       .hero-text {
         .heading-primary {
           &__main {
