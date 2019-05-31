@@ -18,13 +18,12 @@
         <v-container fluid fill-height>
           <v-layout align-center justify-center>
             <v-flex xs12 sm8 md4>
-
               <app-datepicker></app-datepicker>
               <v-text-field label="Trip origin" prepend-icon="place"></v-text-field>
               <v-text-field label="Trip destination" prepend-icon="place"></v-text-field>
               <app-add-destinations></app-add-destinations>
 
-              <!-- Slider -->
+              <!-- Expansion Panel -->
               <v-expansion-panel>
                 <v-expansion-panel-content>
                   <template v-slot:header>
@@ -32,17 +31,12 @@
                   </template>
                   <v-card>
                     <v-card-text>
-                      <!-- Radio buttons -->
+                      <!-- Travel Modes -->
                       <v-layout wrap>
-                        <p class="grey-text">Travel Mode:</p>
-                        <v-radio-group v-model="travelMode" row>
-                          <v-radio label="Drive" value="drive"></v-radio>
-                          <v-radio label="Fly" value="fly"></v-radio>
-                          <v-radio label="Transit" value="transit"></v-radio>
-                          <v-radio label="Walk" value="walk"></v-radio>
-                          <v-radio label="Suggest me" value="suggest me"></v-radio>
-                        </v-radio-group>
+                        <v-select v-model="travelMode" :items="travelModes" label="Travel Mode"></v-select>
                       </v-layout>
+
+                      <!-- Sliders -->
                       <v-layout wrap>
                         <app-slider>Wildlife</app-slider>
                         <app-slider>Romantic</app-slider>
@@ -73,16 +67,17 @@
 <script>
 import Slider from "./dialog/Slider";
 import AddDestinations from "./dialog/AddDestinations";
-import Datepicker from "./Datepicker"
+import Datepicker from "./Datepicker";
 
 export default {
   data() {
     return {
       dialog: false,
-      travelMode: ""
+      travelMode: "Fly",
+      travelModes: [ "Drive", "Fly", "Transit", "Walk", "Suggest me" ]
     };
   },
-    methods: {
+  methods: {
     //
   },
   components: {

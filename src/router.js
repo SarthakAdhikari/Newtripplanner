@@ -7,7 +7,20 @@ import Forum from './views/Forum.vue'
 
 Vue.use(Router)
 
+import goTo from 'vuetify/lib/components/Vuetify/goTo'
+
 export default new Router({
+  scrollBehavior: (to, from, savedPosition) => {
+    let scrollTo = 0
+
+    if (to.hash) {
+      scrollTo = to.hash
+    } else if (savedPosition) {
+      scrollTo = savedPosition.y
+    }
+
+    return goTo(scrollTo)
+  },
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [

@@ -3,7 +3,7 @@
     <button class="add-destinations" @click.stop.prevent="dialog = true">+ Add destinations</button>
 
     <v-dialog v-model="dialog" max-width="400" persistent>
-      <v-card>
+      <v-card class="py-4">
         <v-card-text>
           <div class="text-center">
             <h2 class="heading-secondary">Add your destinations</h2>
@@ -11,16 +11,9 @@
           <!-- Add Destinations -->
           <app-add-destinations></app-add-destinations>
 
-          <!-- Radio buttons -->
+          <!-- Travel Mode -->
           <v-layout wrap>
-            <p class="grey-text">Travel Mode:</p>
-            <v-radio-group v-model="travelMode" row>
-              <v-radio label="Drive" value="drive"></v-radio>
-              <v-radio label="Fly" value="fly"></v-radio>
-              <v-radio label="Transit" value="transit"></v-radio>
-              <v-radio label="Walk" value="walk"></v-radio>
-              <v-radio label="Suggest me" value="suggest me"></v-radio>
-            </v-radio-group>
+            <v-select v-model="travelMode" :items="travelModes" label="Travel Mode"></v-select>
           </v-layout>
 
           <!-- Slider -->
@@ -69,7 +62,8 @@ export default {
   data() {
     return {
       dialog: false,
-      travelMode: ""
+      travelMode: "Fly",
+      travelModes: ["Drive", "Fly", "Transit", "Walk", "Suggest me"]
     };
   },
   components: {
@@ -80,6 +74,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.heading-secondary {
+  margin-bottom: 1rem;
+  font-size: 3rem;
+}
 .add-destinations {
   color: $primary;
 
