@@ -9,7 +9,7 @@
             <h2 class="heading-secondary">Add your destinations</h2>
           </div>
           <!-- Add Destinations -->
-          <app-add-destinations></app-add-destinations>
+          <app-add-destinations @addMidDestinations="onAddingMidDestinations"></app-add-destinations>
 
           <!-- Travel Mode -->
           <v-layout wrap>
@@ -24,18 +24,90 @@
               </template>
               <v-card>
                 <v-card-text>
-                  <v-layout wrap>
-                    <app-slider>Wildlife</app-slider>
-                    <app-slider>Romantic</app-slider>
-                  </v-layout>
-                  <v-layout wrap>
-                    <app-slider>City</app-slider>
-                    <app-slider>Mountain</app-slider>
-                  </v-layout>
-                  <v-layout wrap>
-                    <app-slider>Beach</app-slider>
-                    <app-slider>Nature</app-slider>
-                  </v-layout>
+                  <!-- Sliders -->
+                  <div>
+                    <!-- First Slider -->
+                    <v-layout wrap>
+                      <v-flex xs12 sm6 class="px-2">
+                        <v-subheader>Romantic</v-subheader>
+                        <v-slider
+                          persistent-hint
+                          thumb-label="always"
+                          thumb-size="20"
+                          min="0"
+                          max="10"
+                          height="5px"
+                          v-model="romRtg"
+                        ></v-slider>
+                      </v-flex>
+                      <v-flex xs12 sm6 class="px-2">
+                        <v-subheader>Wildlife</v-subheader>
+                        <v-slider
+                          persistent-hint
+                          thumb-label="always"
+                          thumb-size="20"
+                          min="0"
+                          max="10"
+                          height="5px"
+                          v-model="wlfRtg"
+                        ></v-slider>
+                      </v-flex>
+                    </v-layout>
+                    <!-- Second Slider -->
+                    <v-layout wrap>
+                      <v-flex xs12 sm6 class="px-2">
+                        <v-subheader>Nature</v-subheader>
+                        <v-slider
+                          persistent-hint
+                          thumb-label="always"
+                          thumb-size="20"
+                          min="0"
+                          max="10"
+                          height="5px"
+                          v-model="natRtg"
+                        ></v-slider>
+                      </v-flex>
+                      <v-flex xs12 sm6 class="px-2">
+                        <v-subheader>Beach</v-subheader>
+                        <v-slider
+                          persistent-hint
+                          thumb-label="always"
+                          thumb-size="20"
+                          min="0"
+                          max="10"
+                          height="5px"
+                          v-model="bchRtg"
+                        ></v-slider>
+                      </v-flex>
+                    </v-layout>
+                    <!-- Third Slider -->
+                    <v-layout wrap>
+                      <v-flex xs12 sm6 class="px-2">
+                        <v-subheader>City</v-subheader>
+                        <v-slider
+                          persistent-hint
+                          thumb-label="always"
+                          thumb-size="20"
+                          min="0"
+                          max="10"
+                          height="5px"
+                          v-model="cityRtg"
+                        ></v-slider>
+                      </v-flex>
+                      <v-flex xs12 sm6 class="px-2">
+                        <v-subheader>Mountain</v-subheader>
+                        <v-slider
+                          persistent-hint
+                          thumb-label="always"
+                          thumb-size="20"
+                          min="0"
+                          max="10"
+                          height="5px"
+                          v-model="mntRtg"
+                        ></v-slider>
+                      </v-flex>
+                    </v-layout>
+                  </div>
                 </v-card-text>
               </v-card>
             </v-expansion-panel-content>
@@ -46,7 +118,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
 
-          <v-btn color="primary" @click="dialog = false">Save</v-btn>
+          <v-btn color="primary" @click="onSave">Save</v-btn>
 
           <v-btn color="primary" flat="flat" @click="dialog = false">Cancel</v-btn>
         </v-card-actions>
@@ -57,18 +129,62 @@
 
 <script>
 import AddDestinations from "./AddDestinations";
-import Slider from "./Slider";
 export default {
   data() {
     return {
       dialog: false,
       travelMode: "Fly",
-      travelModes: ["Drive", "Fly", "Transit", "Walk", "Suggest me"]
+      travelModes: ["Drive", "Fly", "Transit", "Walk", "Suggest me"],
+      midDestinations: null,
+      romRtg: 5,
+      wlfRtg: 5,
+      natRtg: 5,
+      bchRtg: 5,
+      cityRtg: 5,
+      mntRtg: 5
     };
   },
   components: {
-    appAddDestinations: AddDestinations,
-    appSlider: Slider
+    appAddDestinations: AddDestinations
+  },
+  methods: {
+    onAddingMidDestinations(value) {
+      this.midDestinations = value;
+    },
+    onSave() {
+      this.dialog = false;
+      this.$emit("dataFromDialog", {
+        midDestinations: this.midDestinations,
+        travelMode: this.travelMode,
+        activities: [
+          {
+            actv_typ: "rom",
+            actv_rtg: this.romRtg
+          },
+          {
+            actv_typ: "wlf",
+            actv_rtg: this.wlfRtg
+          },
+          {
+            actv_typ: "nat",
+            actv_rtg: this.natRtg
+          },
+          {
+            actv_typ: "bch",
+            actv_rtg: this.bchRtg
+          },
+          {
+            actv_typ: "city",
+            actv_rtg: this.cityRtg
+          },
+          {
+            actv_typ: "mnt",
+            actv_rtg: this.mntRtg
+          }
+        ],
+        showSubmitBtn: true
+      });
+    }
   }
 };
 </script>

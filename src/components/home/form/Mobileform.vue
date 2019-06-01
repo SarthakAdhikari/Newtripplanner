@@ -18,10 +18,13 @@
         <v-container fluid fill-height>
           <v-layout align-center justify-center>
             <v-flex xs12 sm8 md4>
-              <app-datepicker></app-datepicker>
-              <v-text-field label="Trip origin" prepend-icon="place"></v-text-field>
-              <v-text-field label="Trip destination" prepend-icon="place"></v-text-field>
-              <app-add-destinations></app-add-destinations>
+              <!-- Date Pickers -->
+              <app-datepicker @startDate="startsOn" @endDate="endsOn"></app-datepicker>
+
+              <v-text-field label="Trip origin" prepend-icon="place" v-model="tripOrig"></v-text-field>
+              <v-text-field label="Trip destination" prepend-icon="place" v-model="tripDest"></v-text-field>
+              <!-- Add Destinations -->
+              <app-add-destinations @addMidDestinations="onAddingMidDestinations"></app-add-destinations>
 
               <!-- Expansion Panel -->
               <v-expansion-panel>
@@ -37,24 +40,95 @@
                       </v-layout>
 
                       <!-- Sliders -->
-                      <v-layout wrap>
-                        <app-slider>Wildlife</app-slider>
-                        <app-slider>Romantic</app-slider>
-                      </v-layout>
-                      <v-layout wrap>
-                        <app-slider>City</app-slider>
-                        <app-slider>Mountain</app-slider>
-                      </v-layout>
-                      <v-layout wrap>
-                        <app-slider>Beach</app-slider>
-                        <app-slider>Nature</app-slider>
-                      </v-layout>
+                      <div>
+                        <!-- First Slider -->
+                        <v-layout wrap>
+                          <v-flex xs12 sm6 class="px-2">
+                            <v-subheader>Romantic</v-subheader>
+                            <v-slider
+                              persistent-hint
+                              thumb-label="always"
+                              thumb-size="20"
+                              min="0"
+                              max="10"
+                              height="5px"
+                              v-model="romRtg"
+                            ></v-slider>
+                          </v-flex>
+                          <v-flex xs12 sm6 class="px-2">
+                            <v-subheader>Wildlife</v-subheader>
+                            <v-slider
+                              persistent-hint
+                              thumb-label="always"
+                              thumb-size="20"
+                              min="0"
+                              max="10"
+                              height="5px"
+                              v-model="wlfRtg"
+                            ></v-slider>
+                          </v-flex>
+                        </v-layout>
+                        <!-- Second Slider -->
+                        <v-layout wrap>
+                          <v-flex xs12 sm6 class="px-2">
+                            <v-subheader>Nature</v-subheader>
+                            <v-slider
+                              persistent-hint
+                              thumb-label="always"
+                              thumb-size="20"
+                              min="0"
+                              max="10"
+                              height="5px"
+                              v-model="natRtg"
+                            ></v-slider>
+                          </v-flex>
+                          <v-flex xs12 sm6 class="px-2">
+                            <v-subheader>Beach</v-subheader>
+                            <v-slider
+                              persistent-hint
+                              thumb-label="always"
+                              thumb-size="20"
+                              min="0"
+                              max="10"
+                              height="5px"
+                              v-model="bchRtg"
+                            ></v-slider>
+                          </v-flex>
+                        </v-layout>
+                        <!-- Third Slider -->
+                        <v-layout wrap>
+                          <v-flex xs12 sm6 class="px-2">
+                            <v-subheader>City</v-subheader>
+                            <v-slider
+                              persistent-hint
+                              thumb-label="always"
+                              thumb-size="20"
+                              min="0"
+                              max="10"
+                              height="5px"
+                              v-model="cityRtg"
+                            ></v-slider>
+                          </v-flex>
+                          <v-flex xs12 sm6 class="px-2">
+                            <v-subheader>Mountain</v-subheader>
+                            <v-slider
+                              persistent-hint
+                              thumb-label="always"
+                              thumb-size="20"
+                              min="0"
+                              max="10"
+                              height="5px"
+                              v-model="mntRtg"
+                            ></v-slider>
+                          </v-flex>
+                        </v-layout>
+                      </div>
                     </v-card-text>
                   </v-card>
                 </v-expansion-panel-content>
               </v-expansion-panel>
               <v-layout>
-                <button class="btn btn--primary btn-submit">Submit</button>
+                <button class="btn btn--primary btn-submit" @click="onSubmit">Submit</button>
               </v-layout>
             </v-flex>
           </v-layout>
@@ -65,7 +139,8 @@
 </template>
 
 <script>
-import Slider from "./dialog/Slider";
+const today = new Date();
+
 import AddDestinations from "./dialog/AddDestinations";
 import Datepicker from "./Datepicker";
 
@@ -74,14 +149,83 @@ export default {
     return {
       dialog: false,
       travelMode: "Fly",
-      travelModes: [ "Drive", "Fly", "Transit", "Walk", "Suggest me" ]
+      tripOrig: "",
+      tripDest: "",
+      travelModes: ["Drive", "Fly", "Transit", "Walk", "Suggest me"],
+      midDestinations: null,
+      strt_day: new Date().toISOString().substr(0, 10),
+      end_day: new Date(new Date(today).setDate(today.getDate() + 1))
+        .toISOString()
+        .substr(0, 10),
+      romRtg: 5,
+      wlfRtg: 5,
+      natRtg: 5,
+      bchRtg: 5,
+      cityRtg: 5,
+      mntRtg: 5
     };
   },
   methods: {
-    //
+    onAddingMidDestinations(value) {
+      this.midDestinations = value;
+    },
+    startsOn(value) {
+      this.strt_day = value;
+    },
+    endsOn(value) {
+      this.end_day = value;
+    },
+    onSubmit() {
+      const request = {
+        strt_day: this.strt_day,
+        end_day: this.end_day,
+        destinations: [
+          {
+            cty_nm: this.tripOrig,
+            orig: "Y",
+            middle: "N",
+            dest: "N"
+          },
+          {
+            cty_nm: this.tripDest,
+            orig: "N",
+            middle: "N",
+            dest: "Y"
+          }
+        ],
+        midDestinations: this.midDestinations,
+        travelMode: this.travelMode,
+        activities: [
+          {
+            actv_typ: "rom",
+            actv_rtg: this.romRtg
+          },
+          {
+            actv_typ: "wlf",
+            actv_rtg: this.wlfRtg
+          },
+          {
+            actv_typ: "nat",
+            actv_rtg: this.natRtg
+          },
+          {
+            actv_typ: "bch",
+            actv_rtg: this.bchRtg
+          },
+          {
+            actv_typ: "city",
+            actv_rtg: this.cityRtg
+          },
+          {
+            actv_typ: "mnt",
+            actv_rtg: this.mntRtg
+          }
+        ]
+      };
+      console.log(request);
+    }
   },
   components: {
-    appSlider: Slider,
     appAddDestinations: AddDestinations,
     appDatepicker: Datepicker
   }

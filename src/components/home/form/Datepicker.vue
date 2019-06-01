@@ -12,7 +12,7 @@
         min-width="290px"
       >
         <v-text-field slot="activator" label="Starts On" prepend-icon="date_range" :value="today"></v-text-field>
-        <v-date-picker v-model="today" :min="today"></v-date-picker>
+        <v-date-picker v-model="today" :min="today" @input="onStartDate"></v-date-picker>
       </v-menu>
     </div>
 
@@ -28,7 +28,7 @@
         min-width="290px"
       >
         <v-text-field slot="activator" label="Ends On" prepend-icon="date_range" :value="tomorrow"></v-text-field>
-        <v-date-picker v-model="tomorrow" :min="tomorrow"></v-date-picker>
+        <v-date-picker v-model="tomorrow" :min="tomorrow" @input="onEndDate"></v-date-picker>
       </v-menu>
     </div>
   </div>
@@ -45,7 +45,12 @@ export default {
       .substr(0, 10)
   }),
   methods: {
-    //
+    onStartDate() {
+      this.$emit("startDate", this.today);
+    },
+    onEndDate() {
+      this.$emit("endDate", this.tomorrow);
+    }
   }
 };
 </script>
