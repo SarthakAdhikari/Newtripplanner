@@ -292,7 +292,7 @@ export default {
 
 @media screen and (max-width: 400px) {
   .mobile-container {
-    width: 28rem;
+    width: 90%;
   }
 }
 </style>

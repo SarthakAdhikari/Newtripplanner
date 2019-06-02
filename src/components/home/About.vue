@@ -36,7 +36,7 @@
 
 <style lang="scss" scoped>
 .about {
-  background: $white;
+  background: $light-grey;
   padding: 6rem 0 14rem 0;
   position: relative;
   color: $dark-grey;

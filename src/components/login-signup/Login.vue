@@ -13,13 +13,70 @@
           <i class="fab fa-linkedin-in"></i>
         </a>
       </div>
-      <v-text-field label="Email" prepend-icon="person"></v-text-field>
-      <v-text-field label="Password" prepend-icon="lock"></v-text-field>
+      <v-text-field
+        v-model="email"
+        :error-messages="emailErrors"
+        label="E-mail"
+        prepend-icon="person"
+        required
+        @blur="$v.email.$touch()"
+      ></v-text-field>
+      <v-text-field
+        :error-messages="passwordErrors"
+        label="Password"
+        type="password"
+        prepend-icon="lock"
+        required
+        @blur="$v.password.$touch()"
+      ></v-text-field>
       <a href="#">Forgot your password?</a>
-      <button class="btn btn--primary">Sign In</button>
+      <button class="btn btn--primary" @click="submit">Sign In</button>
     </form>
   </div>
 </template>
+
+<script>
+import { required, email } from "vuelidate/lib/validators";
+export default {
+  data: () => {
+    return {
+      email: "",
+      password: ""
+    };
+  },
+  computed: {
+    emailErrors() {
+      const errors = [];
+      if (!this.$v.email.$dirty) return errors;
+      !this.$v.email.email && errors.push("Must be valid e-mail");
+      !this.$v.email.required && errors.push("E-mail is required");
+      return errors;
+    },
+    passwordErrors() {
+      const errors = [];
+      if (!this.$v.password.$dirty) return errors;
+      !this.$v.password.required && errors.push("Password is required");
+      return errors;
+    }
+  },
+  methods: {
+    submit() {
+      this.$v.$touch();
+    },
+    clear() {
+      this.$v.$reset();
+      this.email = "";
+    }
+  },
+  validations: {
+    email: {
+      required: required,
+      email: email
+    },
+    password: { required: required }
+  }
+};
+</script>
 
 
 <style lang="scss" scoped>
@@ -60,7 +117,9 @@
       }
     }
 
-    .btn--primary { margin-top: 2rem;}
+    .btn--primary {
+      margin-top: 2rem;
+    }
 
     .v-input {
       flex: 0;
@@ -72,8 +131,10 @@
   .form-container {
     form {
       padding: 2rem 3rem;
-      
-      h1 { display: none; }
+
+      h1 {
+        display: none;
+      }
     }
   }
 }

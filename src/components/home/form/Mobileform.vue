@@ -21,8 +21,20 @@
               <!-- Date Pickers -->
               <app-datepicker @startDate="startsOn" @endDate="endsOn"></app-datepicker>
 
-              <v-text-field label="Trip origin" prepend-icon="place" v-model="tripOrig"></v-text-field>
-              <v-text-field label="Trip destination" prepend-icon="place" v-model="tripDest"></v-text-field>
+              <v-text-field
+                label="Trip origin"
+                prepend-icon="place"
+                v-model="tripOrig"
+                :error-messages="tripOrigErrors"
+                @blur="$v.tripOrig.$touch()"
+              ></v-text-field>
+              <v-text-field
+                label="Trip destination"
+                prepend-icon="place"
+                v-model="tripDest"
+                :error-messages="tripDestErrors"
+                @blur="$v.tripDest.$touch()"
+              ></v-text-field>
               <!-- Add Destinations -->
               <app-add-destinations @addMidDestinations="onAddingMidDestinations"></app-add-destinations>
 
@@ -36,7 +48,13 @@
                     <v-card-text>
                       <!-- Travel Modes -->
                       <v-layout wrap>
-                        <v-select v-model="travelMode" :items="travelModes" label="Travel Mode"></v-select>
+                        <v-select
+                          v-model="travelMode"
+                          :items="travelModes"
+                          label="Travel Mode"
+                          :error-messages="travelModeError"
+                          @blur="$v.travelMode.$touch()"
+                        ></v-select>
                       </v-layout>
 
                       <!-- Sliders -->
@@ -140,7 +158,7 @@
 
 <script>
 const today = new Date();
-
+import { required } from "vuelidate/lib/validators";
 import AddDestinations from "./dialog/AddDestinations";
 import Datepicker from "./Datepicker";
 
@@ -148,7 +166,7 @@ export default {
   data() {
     return {
       dialog: false,
-      travelMode: "Fly",
+      travelMode: "",
       tripOrig: "",
       tripDest: "",
       travelModes: ["Drive", "Fly", "Transit", "Walk", "Suggest me"],
@@ -165,6 +183,37 @@ export default {
       mntRtg: 5
     };
   },
+  validations: {
+    travelMode: {
+      required: required
+    },
+    tripOrig: {
+      required: required
+    },
+    tripDest: {
+      required
+    }
+  },
+  computed: {
+    travelModeError() {
+      const errors = [];
+      if (!this.$v.travelMode.$dirty) return errors;
+      !this.$v.travelMode.$required && errors.push("Travel Mode is required");
+      return errors;
+    },
+    tripOrigErrors() {
+      const errors = [];
+      if (!this.$v.tripOrig.$dirty) return errors;
+      !this.$v.tripOrig.required && errors.push("Trip Origin is required");
+      return errors;
+    },
+    tripDestErrors() {
+      const errors = [];
+      if (!this.$v.tripDest.$dirty) return errors;
+      !this.$v.tripDest.required && errors.push("Trip Destination is required");
+      return errors;
+    }
+  },
   methods: {
     onAddingMidDestinations(value) {
       this.midDestinations = value;
@@ -176,53 +225,56 @@ export default {
       this.end_day = value;
     },
     onSubmit() {
-      const request = {
-        strt_day: this.strt_day,
-        end_day: this.end_day,
-        destinations: [
-          {
-            cty_nm: this.tripOrig,
-            orig: "Y",
-            middle: "N",
-            dest: "N"
-          },
-          {
-            cty_nm: this.tripDest,
-            orig: "N",
-            middle: "N",
-            dest: "Y"
-          }
-        ],
-        midDestinations: this.midDestinations,
-        travelMode: this.travelMode,
-        activities: [
-          {
-            actv_typ: "rom",
-            actv_rtg: this.romRtg
-          },
-          {
-            actv_typ: "wlf",
-            actv_rtg: this.wlfRtg
-          },
-          {
-            actv_typ: "nat",
-            actv_rtg: this.natRtg
-          },
-          {
-            actv_typ: "bch",
-            actv_rtg: this.bchRtg
-          },
-          {
-            actv_typ: "city",
-            actv_rtg: this.cityRtg
-          },
-          {
-            actv_typ: "mnt",
-            actv_rtg: this.mntRtg
-          }
-        ]
-      };
-      console.log(request);
+      this.$v.$touch();
+      if (!this.$v.$invalid) {
+        const request = {
+          strt_day: this.strt_day,
+          end_day: this.end_day,
+          destinations: [
+            {
+              cty_nm: this.tripOrig,
+              orig: "Y",
+              middle: "N",
+              dest: "N"
+            },
+            {
+              cty_nm: this.tripDest,
+              orig: "N",
+              middle: "N",
+              dest: "Y"
+            }
+          ],
+          midDestinations: this.midDestinations,
+          travelMode: this.travelMode,
+          activities: [
+            {
+              actv_typ: "rom",
+              actv_rtg: this.romRtg
+            },
+            {
+              actv_typ: "wlf",
+              actv_rtg: this.wlfRtg
+            },
+            {
+              actv_typ: "nat",
+              actv_rtg: this.natRtg
+            },
+            {
+              actv_typ: "bch",
+              actv_rtg: this.bchRtg
+            },
+            {
+              actv_typ: "city",
+              actv_rtg: this.cityRtg
+            },
+            {
+              actv_typ: "mnt",
+              actv_rtg: this.mntRtg
+            }
+          ]
+        };
+        console.log(request);
+      }
     }
   },
   components: {

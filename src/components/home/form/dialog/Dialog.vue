@@ -13,8 +13,9 @@
 
           <!-- Travel Mode -->
           <v-layout wrap>
-            <v-select v-model="travelMode" :items="travelModes" label="Travel Mode"></v-select>
+            <v-select v-model="travelMode" :items="travelModes" label="Travel Mode" @blur="$v.travelMode.$touch" :error-messages="travelModeError"></v-select>
           </v-layout>
+          <br>
 
           <!-- Slider -->
           <v-expansion-panel>
@@ -128,12 +129,13 @@
 </template>
 
 <script>
+import { required } from "vuelidate/lib/validators";
 import AddDestinations from "./AddDestinations";
 export default {
   data() {
     return {
       dialog: false,
-      travelMode: "Fly",
+      travelMode: "",
       travelModes: ["Drive", "Fly", "Transit", "Walk", "Suggest me"],
       midDestinations: null,
       romRtg: 5,
@@ -146,6 +148,19 @@ export default {
   },
   components: {
     appAddDestinations: AddDestinations
+  },
+  validations: {
+    travelMode: {
+      required: required
+    }
+  },
+  computed: {
+    travelModeError() {
+      const errors = [];
+      if (!this.$v.travelMode.$dirty) return errors;
+      (!this.$v.travelMode.required) && errors.push("Travel Mode is required")
+      return errors;
+    }
   },
   methods: {
     onAddingMidDestinations(value) {

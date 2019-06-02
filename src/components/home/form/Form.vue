@@ -1,8 +1,22 @@
 <template>
   <form id="form">
     <app-datepicker @startDate="startsOn" @endDate="endsOn"></app-datepicker>
-    <v-text-field label="Trip origin" prepend-icon="place" v-model="tripOrig"></v-text-field>
-    <v-text-field label="Trip destination" prepend-icon="place" v-model="tripDest"></v-text-field>
+    <v-text-field
+      label="Trip origin"
+      prepend-icon="place"
+      v-model="tripOrig"
+      :error-messages="tripOrigErrors"
+      @blur="$v.tripOrig.$touch()"
+      required
+    ></v-text-field>
+    <v-text-field
+      label="Trip destination"
+      prepend-icon="place"
+      v-model="tripDest"
+      :error-messages="tripDestErrors"
+      @blur="$v.tripDest.$touch()"
+      required
+    ></v-text-field>
     <app-dialog @dataFromDialog="saveDataFromDialog"></app-dialog>
     <v-layout v-if="showSubmitBtn">
       <button class="btn btn--primary btn-submit" @click.prevent="onSubmit">Submit</button>
@@ -12,7 +26,7 @@
 
 <script>
 const today = new Date();
-
+import { required } from "vuelidate/lib/validators";
 import Datepicker from "./Datepicker.vue";
 import Dialog from "./dialog/Dialog.vue";
 export default {
@@ -34,6 +48,28 @@ export default {
     appDatepicker: Datepicker,
     appDialog: Dialog
   },
+  validations: {
+    tripOrig: {
+      required: required
+    },
+    tripDest: {
+      required
+    }
+  },
+  computed: {
+    tripOrigErrors() {
+      const errors = [];
+      if (!this.$v.tripOrig.$dirty) return errors;
+      !this.$v.tripOrig.required && errors.push("Trip Origin is required");
+      return errors;
+    },
+    tripDestErrors() {
+      const errors = [];
+      if (!this.$v.tripDest.$dirty) return errors;
+      !this.$v.tripDest.required && errors.push("Trip Destination is required");
+      return errors;
+    }
+  },
   methods: {
     startsOn(value) {
       this.strt_day = value;
@@ -48,6 +84,7 @@ export default {
       this.travelMode = value.travelMode;
     },
     onSubmit() {
+      this.$v.$touch();
       const request = {
         strt_day: this.strt_day,
         end_day: this.end_day,
