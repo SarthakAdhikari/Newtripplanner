@@ -8,7 +8,8 @@ Vue.use(Vuetify, {
     primary: '#3183C8',
     white: '#fff',
     black: '#000',
-    "dark-grey": '#333'
+    "dark-grey": '#333',
+    "light-grey": '#f4f4f4'
   }
 })
 

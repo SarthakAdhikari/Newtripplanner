@@ -13,12 +13,13 @@
         </div>
       </div>
     </div>
-    <app-wave fillColor="#fff"></app-wave>
+    <app-wave :fillColor="color"></app-wave>
   </section>
 </template>
 
 <script>
 export default {
+  props: ["color"],
   data: () => {
     return {
       features: [
@@ -55,7 +56,7 @@ export default {
       justify-content: center;
       align-items: center;
       flex-direction: column;
-      
+
       border-radius: 2rem;
       box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
       transition: transform 0.3s ease-out;
@@ -71,6 +72,12 @@ export default {
         font-size: 2.4rem;
       }
     }
+  }
+
+  svg {
+    position: absolute;
+    left: 0;
+    bottom: 0;
   }
 }
 

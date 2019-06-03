@@ -1,7 +1,7 @@
 <template>
   <div>
     <app-hero></app-hero>
-    <app-features></app-features>
+    <app-features color="#fff"></app-features>
     <app-blog></app-blog>
     <app-about></app-about>
   </div>
