@@ -106,7 +106,8 @@ export default {
         travelMode: this.travelMode,
         activities: this.activities
       };
-      console.log(request);
+      //console.log(request);
+      this.$router.push("/trip-plan-response");
     }
   }
 };

@@ -22,7 +22,7 @@ export default new Router({
 
     return goTo(scrollTo)
   },
-  mode: 'history',
+  /* mode: 'history', */
   base: process.env.BASE_URL,
   routes: [
     { path: '/', name: 'Home', component: Home},

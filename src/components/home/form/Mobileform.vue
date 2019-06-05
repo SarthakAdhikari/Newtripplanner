@@ -273,7 +273,8 @@ export default {
             }
           ]
         };
-        console.log(request);
+        //console.log(request);
+        this.$router.push("/trip-plan-response");
       }
     }
   },
