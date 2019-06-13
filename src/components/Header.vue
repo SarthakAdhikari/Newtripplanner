@@ -49,13 +49,11 @@
 export default {
   data: () => ({
     desktopMenuItems: [
-      { title: "Travel Forum", to: "/forum" },
       { title: "My plans", to: "/myplans" },
       { title: "Login / Sign in", to: "login-signin" }
     ],
     mobileMenuItems: [
       { title: "Home", to: "/" },
-      { title: "Travel Forum", to: "/forum" },
       { title: "My plans", to: "/myplans" },
       { title: "Login / Sign in", to: "login-signin" }
     ],

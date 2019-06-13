@@ -14,23 +14,34 @@
         </a>
       </div>
       <v-text-field
+        v-model="username"
+        :error-messages="usernameErrors"
+        label="Username"
+        prepend-icon="person"
+        required
+        @blur="$v.username.$touch()"
+      ></v-text-field>
+      <v-text-field
         v-model="email"
         :error-messages="emailErrors"
         label="E-mail"
-        prepend-icon="person"
+        prepend-icon="email"
         required
         @blur="$v.email.$touch()"
       ></v-text-field>
       <v-text-field
+        :append-icon="showPswd ? 'visibility' : 'visibility_off'"
         :error-messages="passwordErrors"
-        label="Password"
-        type="password"
+        v-model="password"
         prepend-icon="lock"
-        required
         @blur="$v.password.$touch()"
+        :type="showPswd ? 'text' : 'password'"
+        label="Password"
+        class="input-group--focused"
+        @click:append="showPswd = !showPswd"
       ></v-text-field>
       <a href="#">Forgot your password?</a>
-      <button class="btn btn--primary" @click="submit">Sign In</button>
+      <button class="btn btn--primary" @click.prevent="submit" :disabled="$v.$invalid">Sign In</button>
     </form>
   </div>
 </template>
@@ -40,8 +51,10 @@ import { required, email } from "vuelidate/lib/validators";
 export default {
   data: () => {
     return {
+      username: "",
+      password: "",
       email: "",
-      password: ""
+      showPswd: false
     };
   },
   computed: {
@@ -50,6 +63,12 @@ export default {
       if (!this.$v.email.$dirty) return errors;
       !this.$v.email.email && errors.push("Must be valid e-mail");
       !this.$v.email.required && errors.push("E-mail is required");
+      return errors;
+    },
+    usernameErrors() {
+      const errors = [];
+      if (!this.$v.username.$dirty) return errors;
+      !this.$v.username.required && errors.push("Username is required");
       return errors;
     },
     passwordErrors() {
@@ -61,19 +80,22 @@ export default {
   },
   methods: {
     submit() {
-      this.$v.$touch();
-    },
-    clear() {
-      this.$v.$reset();
-      this.email = "";
+      const formData = {
+        username: this.username,
+        email: this.email,
+        password: this.password
+      };
+      console.log(formData);
+      this.$store.dispatch('login', formData);
     }
   },
   validations: {
+    username: { required },
+    password: { required },
     email: {
       required: required,
       email: email
-    },
-    password: { required: required }
+    }
   }
 };
 </script>

@@ -91,7 +91,7 @@ export default {
 #app {
   background: linear-gradient(rgba(29, 25, 25, 0.7), rgba(0, 0, 0, 0.7)),
     url("./bg.jpg") top / cover no-repeat;
-  height: 90vh;
+  height: 100vh;
   position: relative;
   padding-top: 4rem;
 
@@ -120,7 +120,7 @@ export default {
   width: 70rem;
   max-width: 100%;
   margin: auto;
-  min-height: 48rem;
+  min-height: 55rem;
 
   button:focus {
     outline: none;

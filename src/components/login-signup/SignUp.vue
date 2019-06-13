@@ -14,43 +14,50 @@
         </a>
       </div>
       <v-text-field
+        v-model="username"
+        :error-messages="usernameErrors"
+        label="Username"
+        prepend-icon="person"
+        required
+        @blur="$v.username.$touch()"
+      ></v-text-field>
+      <v-text-field
         v-model="email"
         :error-messages="emailErrors"
         label="E-mail"
-        prepend-icon="person"
+        prepend-icon="email"
         required
         @blur="$v.email.$touch()"
       ></v-text-field>
       <v-text-field
+        :append-icon="showPswd ? 'visibility' : 'visibility_off'"
+        :error-messages="passwordErrors"
+        v-model="password"
+        @blur="$v.password.$touch()"
+        :type="showPswd ? 'text' : 'password'"
         label="Password"
-        type="password"
         prepend-icon="lock"
-        required
-        :rules="passwordRules"
+        class="input-group--focused"
+        @click:append="showPswd = !showPswd"
       ></v-text-field>
-      <v-text-field
-        label="Confirm Password"
-        prepend-icon="lock"
-        required
-        :rules="confirmPswd"
-      ></v-text-field>
-      <button class="btn btn--primary btn-signup" @click.prevent="submit" >Sign Up</button>
+      <button
+        class="btn btn--primary btn-signup"
+        @click.prevent="submit"
+        :disabled="$v.$invalid"
+      >Sign Up</button>
     </v-form>
   </div>
 </template>
 
 <script>
-import { required, email, minLength, sameAs } from "vuelidate/lib/validators";
+import { required, email, minLength } from "vuelidate/lib/validators";
 export default {
   data: () => {
     return {
       email: "",
       password: "",
-      confirmPassword: "",
-      passwordRules: [
-        v => !!v || "Password is required",
-        v => (v && v.length > 8) || "Must be at least 8 characters"
-      ]
+      username: "",
+      showPswd: false
     };
   },
   computed: {
@@ -61,28 +68,31 @@ export default {
       !this.$v.email.required && errors.push("E-mail is required");
       return errors;
     },
-    confirmPasswordErrors() {
+    usernameErrors() {
       const errors = [];
-      !this.$v.confirmPassword.sameAs && errors.push("Passwords must be indentical");
+      if (!this.$v.username.$dirty) return errors;
+      !this.$v.username.minLen && errors.push("Must be at least 3 characters");
+      !this.$v.username.required && errors.push("Username is required");
       return errors;
     },
-    confirmPswd() {
-      return [
-        () => (this.password === this.confirmPassword) || 'E-mail must match',
-        v => !!v || 'Confirm password is required'
-      ];
+    passwordErrors() {
+      const errors = [];
+      if (!this.$v.password.$dirty) return errors;
+      !this.$v.password.required && errors.push("Password is required");
+      !this.$v.password.minLen &&
+        errors.push("Password must be at least 8 characters");
+      return errors;
     }
   },
   methods: {
     submit() {
-      if (this.$refs.form.validate()) {
-        console.log("Submitted")
-        console.log(this.$v);
-      }
-    },
-    clear() {
-      this.$v.$reset();
-      this.email = "";
+      const formData = {
+        username: this.username,
+        email: this.email,
+        password: this.password
+      };
+      console.log(formData);
+      this.$store.dispatch('signup', formData);
     }
   },
   validations: {
@@ -90,8 +100,13 @@ export default {
       required: required,
       email: email
     },
-    confirmPassword: {
-      sameAs: sameAs('password')
+    username: {
+      required: required,
+      minLen: minLength(3)
+    },
+    password: {
+      required: required,
+      minLen: minLength(8)
     }
   }
 };

@@ -8,6 +8,8 @@
 	transition: all 0.2s;
 	position: relative;
 	font-size: $default-font-size;
+
+	&:focus { outline: none; }
 	
 	&:link,
 	&:visited {
