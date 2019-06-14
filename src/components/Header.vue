@@ -31,12 +31,25 @@
           </div>
           <div>
             <ul class="desktop-nav--items">
-              <router-link
-                class="desktop-nav__item"
-                v-for="(menu, index) of desktopMenuItems"
-                :key="index"
-                :to="menu.to"
-              >{{ menu.title }}</router-link>
+              <router-link to="/myplans" class="desktop-nav__item">My plans</router-link>
+              <router-link to="/login-signin" class="desktop-nav__item" v-if="!auth">Login / Sign in</router-link>
+              <!-- User Account and Logout -->
+              <div v-if="auth">
+                <v-menu offset-y>
+                  <button slot="activator" class="button">
+                    <span>User</span>
+                    <v-icon right color="light-grey">expand_more</v-icon>
+                  </button>
+                  <v-list>
+                    <v-list-tile>
+                      <a>My account</a>
+                    </v-list-tile>
+                    <v-list-tile>
+                      <a @click="onLogout">Logout</a>
+                    </v-list-tile>
+                  </v-list>
+                </v-menu>
+              </div>
             </ul>
           </div>
         </div>
@@ -46,12 +59,9 @@
 </template>
 
 <script>
+import router from "../router";
 export default {
   data: () => ({
-    desktopMenuItems: [
-      { title: "My plans", to: "/myplans" },
-      { title: "Login / Sign in", to: "login-signin" }
-    ],
     mobileMenuItems: [
       { title: "Home", to: "/" },
       { title: "My plans", to: "/myplans" },
@@ -59,9 +69,18 @@ export default {
     ],
     drawer: false
   }),
+  computed: {
+    auth() {
+      return this.$store.getters.isAuthenticated;
+    }
+  },
   methods: {
     goToHome() {
       this.$router.push("/");
+    },
+    onLogout() {
+      this.$store.dispatch("logout");
+      router.replace("/");
     }
   }
 };
@@ -128,11 +147,25 @@ export default {
           list-style: none;
           display: flex;
 
+          div {
+            .button {
+              line-height: 6rem;
+              padding: 0 3rem;
+              display: inline-block;
+              color: $light-grey;
+
+              &:focus {
+                outline: none;
+              }
+            }
+          }
+
           a {
             color: $light-grey;
             text-decoration: none;
             line-height: 6rem;
             padding: 0 3rem;
+            display: inline-block;
 
             &.router-link-exact-active {
               background: $primary;

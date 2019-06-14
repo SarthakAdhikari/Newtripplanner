@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from './store'
+
 import Home from './views/Home.vue'
 import Myplans from './views/Myplans.vue'
 import LoginSingin from './views/login-signin/LoginSignin.vue'
@@ -26,10 +28,20 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     { path: '/', name: 'Home', component: Home},
-    { path: '/myplans', name: 'My plans', component: Myplans},
     { path: '/forum', name: 'Forum', component: Forum},
     { path: '/login-signin', name: 'Login / Sign in', component: LoginSingin},
     { path: '/trip-plan-response', name: 'Trip plan response', component: TripPlanResponse},
+    {
+      path: '/myplans',
+      component: Myplans,
+      beforeEnter (to, from, next) {
+        if (store.state.key) {
+          next()
+        } else {
+          next('/login-signin');
+        }
+      }
+    }
   ]
 })
 

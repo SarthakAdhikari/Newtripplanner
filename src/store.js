@@ -10,8 +10,11 @@ export default new Vuex.Store({
     key: null
   },
   mutations: {
-    authUser (state, userData) {
-      state.key = userData.key
+    authUser(state, userData) {
+      state.key = userData.key;
+    },
+    clearAuthData(state) {
+      state.key = null;
     }
   },
   actions: {
@@ -23,7 +26,7 @@ export default new Vuex.Store({
           email: authData.email
         })
         .then(res => {
-          //console.log(res);
+          console.log(res);
         })
         .catch(error => console.log(error));
     },
@@ -36,18 +39,31 @@ export default new Vuex.Store({
         })
         .then(res => {
           console.log(res.data.key);
-          commit ('authUser', {
+          commit("authUser", {
             key: res.data.key
-          })
+          });
         })
         .catch(error => console.log(error));
-    }, 
-    fetchUserPlans ( {commit} ) {
-
     },
-    storeUser ({commit}) {
-
-    }
+    logout({ commit }) {
+      commit("clearAuthData");
+    },
+    fetchUserPlans({ commit }, key) {
+      axios
+        .get("/view-user-trip/" + key)
+        .then(res => {
+          console.log(res);
+        })
+        .catch(error => console.log(error));
+    },
+    storeUser({ commit }) {}
   },
-  getters: {}
+  getters: {
+    isAuthenticated(state) {
+      return state.key !== null;
+    },
+    getKey(state) {
+      return state.key
+    }
+  }
 });
