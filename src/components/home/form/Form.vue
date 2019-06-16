@@ -106,7 +106,8 @@ export default {
         travelMode: this.travelMode,
         activities: this.activities
       };
-      //console.log(request);
+
+      this.$store.dispatch('fetchTripPlan')
       this.$router.push("/trip-plan-response");
     }
   }

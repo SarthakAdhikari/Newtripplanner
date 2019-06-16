@@ -19,6 +19,10 @@ export default {
   components: {
     appHeader: Header,
     appFooter: Footer
+  },
+  created() {
+    this.$store.dispatch("tryAutoLogin");
+    this.$store.dispatch("tryAutoFetchTripPlan");
   }
 };
 </script>
@@ -27,15 +31,19 @@ export default {
 .grid--layout {
   display: grid;
   grid-template-rows: auto fit-content(8rem);
-  grid-template-areas: "main"
-                       "footer";
+  grid-template-areas:
+    "main"
+    "footer";
+  height: 100%;
 }
 
 main {
   grid-area: main;
   margin-top: 6rem;
 }
-footer { grid-area: footer; }
+footer {
+  grid-area: footer;
+}
 </style>
 
 

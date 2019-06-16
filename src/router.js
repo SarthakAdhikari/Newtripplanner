@@ -1,49 +1,47 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import store from './store'
+import Vue from "vue";
+import Router from "vue-router";
+import store from "./store";
 
-import Home from './views/Home.vue'
-import Myplans from './views/Myplans.vue'
-import LoginSingin from './views/login-signin/LoginSignin.vue'
-import Forum from './views/Forum.vue'
-import TripPlanResponse from './views/trip-plan-response/TripPlanResponse.vue'
+import Home from "./views/Home.vue";
+import Myplans from "./views/Myplans.vue";
+import LoginSingin from "./views/login-signin/LoginSignin.vue";
+import Forum from "./views/Forum.vue";
+import TripPlanResponse from "./views/trip-plan-response/TripPlanResponse.vue";
 
-Vue.use(Router)
+Vue.use(Router);
 
-import goTo from 'vuetify/lib/components/Vuetify/goTo'
+import goTo from "vuetify/lib/components/Vuetify/goTo";
 
 export default new Router({
   scrollBehavior: (to, from, savedPosition) => {
-    let scrollTo = 0
+    let scrollTo = 0;
 
     if (to.hash) {
-      scrollTo = to.hash
+      scrollTo = to.hash;
     } else if (savedPosition) {
-      scrollTo = savedPosition.y
+      scrollTo = savedPosition.y;
     }
 
-    return goTo(scrollTo)
+    return goTo(scrollTo);
   },
   /* mode: 'history', */
   base: process.env.BASE_URL,
   routes: [
-    { path: '/', name: 'Home', component: Home},
-    { path: '/forum', name: 'Forum', component: Forum},
-    { path: '/login-signin', name: 'Login / Sign in', component: LoginSingin},
-    { path: '/trip-plan-response', name: 'Trip plan response', component: TripPlanResponse},
+    { path: "/", name: "Home", component: Home },
+    { path: "/forum", name: "Forum", component: Forum },
+    { path: "/login-signin", name: "Login / Sign in", component: LoginSingin },
     {
-      path: '/myplans',
+      path: "/trip-plan-response",
+      name: "Trip plan response",
+      component: TripPlanResponse
+    },
+    {
+      path: "/myplans",
       component: Myplans,
-      beforeEnter (to, from, next) {
-        if (store.state.key) {
-          next()
-        } else {
-          next('/login-signin');
-        }
-      }
+      name: "My plans"
     }
   ]
-})
+});
 
 // routes: [
 //   {

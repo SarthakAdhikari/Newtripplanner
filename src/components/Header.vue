@@ -9,12 +9,10 @@
       </v-toolbar>
       <nav>
         <ul class="mobile-nav--items">
-          <router-link
-            class="mobile-nav__item"
-            v-for="(menu, index) of mobileMenuItems"
-            :key="index"
-            :to="menu.to"
-          >{{ menu.title }}</router-link>
+          <router-link class="mobile-nav__item" to="/">Home</router-link>
+          <router-link to="/myplans" class="mobile-nav__item">My plans ({{ getNoOfPlans() }})</router-link>
+          <router-link to="/login-signin" class="mobile-nav__item" v-if="!auth">Login / Sign in</router-link>
+          <a @click="onLogout" v-if="auth">Logout</a>
         </ul>
       </nav>
     </v-navigation-drawer>
@@ -31,7 +29,7 @@
           </div>
           <div>
             <ul class="desktop-nav--items">
-              <router-link to="/myplans" class="desktop-nav__item">My plans</router-link>
+              <router-link to="/myplans" class="desktop-nav__item">My plans ({{ getNoOfPlans() }})</router-link>
               <router-link to="/login-signin" class="desktop-nav__item" v-if="!auth">Login / Sign in</router-link>
               <!-- User Account and Logout -->
               <div v-if="auth">
@@ -62,11 +60,6 @@
 import router from "../router";
 export default {
   data: () => ({
-    mobileMenuItems: [
-      { title: "Home", to: "/" },
-      { title: "My plans", to: "/myplans" },
-      { title: "Login / Sign in", to: "login-signin" }
-    ],
     drawer: false
   }),
   computed: {
@@ -81,6 +74,9 @@ export default {
     onLogout() {
       this.$store.dispatch("logout");
       router.replace("/");
+    },
+    getNoOfPlans() {
+      return this.$store.getters.getUserPlans.length;
     }
   }
 };

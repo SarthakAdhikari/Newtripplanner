@@ -72,11 +72,11 @@
     margin: 3rem 0;
 
     .social__icon {
-      font-size: 3rem;
+      font-size: 2rem;
       color: $light-grey;
       display: flex;
-      width: 5rem;
-      height: 5rem;
+      width: 4.25rem;
+      height: 4.25rem;
       align-items: center;
       justify-content: center;
       border-radius: 50%;

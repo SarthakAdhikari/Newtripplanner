@@ -7,7 +7,7 @@
       <div class="features__list">
         <div v-for="(feature, index) of features" :key="index" class="feature">
           <div class="feature__icon">
-            <v-icon size="10rem" color="primary">{{ feature.icon }}</v-icon>
+            <v-icon size="6rem" color="primary">{{ feature.icon }}</v-icon>
           </div>
           <p class="text-center">{{ feature.text}}</p>
         </div>
@@ -48,9 +48,9 @@ export default {
 
     .feature {
       background: $white;
-      padding: 2rem;
-      width: 22rem;
-      height: 22rem;
+      padding: 10rem 2rem;
+      width: 18rem;
+      height: 14rem;
 
       display: flex;
       justify-content: center;

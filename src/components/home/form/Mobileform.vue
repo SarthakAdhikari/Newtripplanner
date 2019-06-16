@@ -273,8 +273,9 @@ export default {
             }
           ]
         };
-        //console.log(request);
+
         this.$router.push("/trip-plan-response");
+        this.$store.dispatch('fetchTripPlan')
       }
     }
   },
