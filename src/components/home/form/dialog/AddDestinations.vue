@@ -16,7 +16,7 @@
         </v-btn>
       </v-layout>
       <v-list>
-        <v-list-tile v-for="(destiny, index) of midDestinations" :key="index">
+        <v-list-tile v-for="(destiny, index) of $store.state.midDestinations" :key="index">
           <v-list-tile-avatar>
             <v-icon class="grey lighten-1 white--text">room</v-icon>
           </v-list-tile-avatar>
@@ -42,7 +42,6 @@ export default {
   data() {
     return {
       newDestiny: "",
-      midDestinations: []
     };
   },
   validations: {
@@ -62,23 +61,20 @@ export default {
   methods: {
     addDestiny() {
       if (this.newDestiny !== "") {
-        this.midDestinations.push({
-          cty_nm: this.newDestiny,
-          orig: "N",
-          middle: "Y",
-          dest: "N"
+        this.$store.state.midDestinations.push({
+          "cty_nm": this.newDestiny,
+          "orig": "N",
+          "middle": "Y",
+          "dest": "N"
         });
         this.$v.newDestiny.$reset();
         this.newDestiny = "";
-        /* Emitting mid destinations to parent */
-        this.$emit("addMidDestinations", this.midDestinations);
       } else {
         this.$v.newDestiny.$touch();
       }
     },
     deleteDestiny(index) {
-      this.midDestinations.splice(index, 1);
-      this.$emit("addMidDestinations", this.midDestinations);
+      this.$store.state.midDestinations.splice(index, 1);
     }
   }
 };

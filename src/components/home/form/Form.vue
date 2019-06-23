@@ -40,7 +40,6 @@ export default {
       tripDest: "",
       activities: null,
       travelMode: "",
-      midDestinations: null,
       showSubmitBtn: false
     };
   },
@@ -80,35 +79,37 @@ export default {
     saveDataFromDialog(value) {
       this.showSubmitBtn = value.showSubmitBtn;
       this.activities = value.activities;
-      this.midDestinations = value.midDestinations;
       this.travelMode = value.travelMode;
     },
     onSubmit() {
       this.$v.$touch();
-      const request = {
-        strt_day: this.strt_day,
-        end_day: this.end_day,
-        destinations: [
-          {
-            cty_nm: this.tripOrig,
-            orig: "Y",
-            middle: "N",
-            dest: "N"
-          },
-          {
-            cty_nm: this.tripDest,
-            orig: "N",
-            middle: "N",
-            dest: "Y"
-          }
-        ],
-        midDestinations: this.midDestinations,
-        travelMode: this.travelMode,
-        activities: this.activities
-      };
+      if (!this.$v.$invalid) {
+        const requestData = {
+          strt_day: this.strt_day,
+          end_day: this.end_day,
+          trip_name: `${this.tripOrig} - ${this.tripDest}`,
+          destinations: [
+            {
+              cty_nm: this.tripOrig,
+              orig: "Y",
+              middle: "N",
+              dest: "N"
+            },
+            {
+              cty_nm: this.tripDest,
+              orig: "N",
+              middle: "N",
+              dest: "Y"
+            }
+          ],
+          midDestinations: this.$store.state.midDestinations,
+          travl_mode: this.travelMode,
+          activities: this.activities
+        };
 
-      this.$store.dispatch('fetchTripPlan')
-      this.$router.push("/trip-plan-response");
+        this.$store.dispatch("fetchTripPlan", requestData);
+        this.$router.push("/trip-plan-response");
+      }
     }
   }
 };

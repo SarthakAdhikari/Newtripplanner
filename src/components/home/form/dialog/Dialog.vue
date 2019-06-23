@@ -9,11 +9,17 @@
             <h2 class="heading-secondary">Add your destinations</h2>
           </div>
           <!-- Add Destinations -->
-          <app-add-destinations @addMidDestinations="onAddingMidDestinations"></app-add-destinations>
+          <app-add-destinations></app-add-destinations>
 
           <!-- Travel Mode -->
           <v-layout wrap>
-            <v-select v-model="travelMode" :items="travelModes" label="Travel Mode" @blur="$v.travelMode.$touch" :error-messages="travelModeError"></v-select>
+            <v-select
+              v-model="travelMode"
+              :items="travelModes"
+              label="Travel Mode"
+              @blur="$v.travelMode.$touch"
+              :error-messages="travelModeError"
+            ></v-select>
           </v-layout>
           <br>
 
@@ -108,6 +114,33 @@
                         ></v-slider>
                       </v-flex>
                     </v-layout>
+                    <!-- Fourth Slider -->
+                    <v-layout wrap>
+                      <v-flex xs12 sm6 class="px-2">
+                        <v-subheader>Adventure</v-subheader>
+                        <v-slider
+                          persistent-hint
+                          thumb-label="always"
+                          thumb-size="20"
+                          min="0"
+                          max="10"
+                          height="5px"
+                          v-model="advRtg"
+                        ></v-slider>
+                      </v-flex>
+                      <v-flex xs12 sm6 class="px-2">
+                        <v-subheader>Random</v-subheader>
+                        <v-slider
+                          persistent-hint
+                          thumb-label="always"
+                          thumb-size="20"
+                          min="0"
+                          max="10"
+                          height="5px"
+                          v-model="rndRtg"
+                        ></v-slider>
+                      </v-flex>
+                    </v-layout>
                   </div>
                 </v-card-text>
               </v-card>
@@ -135,7 +168,7 @@ export default {
   data() {
     return {
       dialog: false,
-      travelMode: "",
+      travelMode: "Drive",
       travelModes: ["Drive", "Fly", "Transit", "Walk", "Suggest me"],
       midDestinations: null,
       romRtg: 5,
@@ -143,7 +176,9 @@ export default {
       natRtg: 5,
       bchRtg: 5,
       cityRtg: 5,
-      mntRtg: 5
+      mntRtg: 5,
+      advRtg: 5,
+      rndRtg: 5
     };
   },
   components: {
@@ -158,47 +193,54 @@ export default {
     travelModeError() {
       const errors = [];
       if (!this.$v.travelMode.$dirty) return errors;
-      (!this.$v.travelMode.required) && errors.push("Travel Mode is required")
+      !this.$v.travelMode.required && errors.push("Travel Mode is required");
       return errors;
     }
   },
   methods: {
-    onAddingMidDestinations(value) {
-      this.midDestinations = value;
-    },
     onSave() {
-      this.dialog = false;
-      this.$emit("dataFromDialog", {
-        midDestinations: this.midDestinations,
-        travelMode: this.travelMode,
-        activities: [
-          {
-            actv_typ: "rom",
-            actv_rtg: this.romRtg
-          },
-          {
-            actv_typ: "wlf",
-            actv_rtg: this.wlfRtg
-          },
-          {
-            actv_typ: "nat",
-            actv_rtg: this.natRtg
-          },
-          {
-            actv_typ: "bch",
-            actv_rtg: this.bchRtg
-          },
-          {
-            actv_typ: "city",
-            actv_rtg: this.cityRtg
-          },
-          {
-            actv_typ: "mnt",
-            actv_rtg: this.mntRtg
-          }
-        ],
-        showSubmitBtn: true
-      });
+      this.$v.$touch();
+      if (!this.$v.$invalid) {
+        this.dialog = false;
+        this.$emit("dataFromDialog", {
+          travl_mode: this.travelMode,
+          activities: [
+            {
+              actv_typ: "ROM",
+              actv_rtg: this.romRtg
+            },
+            {
+              actv_typ: "WLF",
+              actv_rtg: this.wlfRtg
+            },
+            {
+              actv_typ: "NAT",
+              actv_rtg: this.natRtg
+            },
+            {
+              actv_typ: "BCH",
+              actv_rtg: this.bchRtg
+            },
+            {
+              actv_typ: "CTY",
+              actv_rtg: this.cityRtg
+            },
+            {
+              actv_typ: "MNT",
+              actv_rtg: this.mntRtg
+            },
+            {
+              actv_typ: "ADV",
+              actv_rtg: this.advRtg
+            },
+            {
+              actv_typ: "RND",
+              actv_rtg: this.rndRtg
+            }
+          ],
+          showSubmitBtn: true
+        });
+      }
     }
   }
 };

@@ -13,6 +13,7 @@
           <router-link to="/myplans" class="mobile-nav__item">My plans ({{ getNoOfPlans() }})</router-link>
           <router-link to="/login-signin" class="mobile-nav__item" v-if="!auth">Login / Sign in</router-link>
           <a @click="onLogout" v-if="auth">Logout</a>
+          <a v-if="auth">My account</a>
         </ul>
       </nav>
     </v-navigation-drawer>
