@@ -1,14 +1,18 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "../axios-auth";
+import router from "../router";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
     key: null,
+    midDestinations: [],
+    tripIDs: [],
     userPlans: [],
-    midDestinations: []
+    individualResponse: null,
+    viewTripID: null
   },
   mutations: {
     authUser(state, userData) {
@@ -17,11 +21,20 @@ export default new Vuex.Store({
     clearAuthData(state) {
       state.key = null;
     },
-    storePlans(state, plans) {
-      state.userPlans = plans;
+    storePlansID(state, plansID) {
+      state.tripIDs = plansID;
     },
     clearMidDestinations(state) {
       state.midDestinations = [];
+    },
+    storePlans(state, plans) {
+      state.userPlans = plans;
+    },
+    storeIndividualResponse(state, payload) {
+      state.individualResponse = payload;
+    },
+    storeViewTripID(state, payload) {
+      state.viewTripID = payload;
     }
   },
   actions: {
@@ -45,11 +58,11 @@ export default new Vuex.Store({
           email: authData.email
         })
         .then(res => {
-          console.log(res.data.key);
           commit("authUser", {
             key: res.data.key
           });
           localStorage.setItem("newTripPlannerKey", res.data.key);
+          router.push("/");
         })
         .catch(error => console.log(error));
     },
@@ -67,9 +80,12 @@ export default new Vuex.Store({
     fetchTripPlan({ commit, getters }, formData) {
       commit("clearMidDestinations");
       if (getters.isAuthenticated) {
-        console.log("is authenticated");
         axios
-          .get("/create-trip", {headers: {"Authorization": `Token ${getters.getKey}`}}, formData)
+          .post(
+            "/create-trip",
+            { headers: { Authorization: `Token ${getters.getKey}` } },
+            formData
+          )
           .then(res => {
             console.log(res.data);
           })
@@ -78,27 +94,66 @@ export default new Vuex.Store({
         axios
           .post("/create-trip", formData)
           .then(res => {
-            console.log(res.data);
+            let tripID = res.data.trip_id;
+            let tripIDs;
+            const tripIDsJSON = localStorage.getItem("newTripIDs");
+
+            let tripResponses = [];
+
+            if (tripIDsJSON !== null) {
+              tripIDs = JSON.parse(tripIDsJSON);
+            } else {
+              tripIDs = [];
+            }
+
+            tripIDs.push(tripID);
+
+            tripIDs.forEach((el, index) => {
+              axios
+                .get("http://newtripplanner.com/app/core/view-trip/92")
+                .then(res => {
+                  commit("storeIndividualResponse", res.data);
+                  const response = {
+                    response: res.data,
+                    trip_id: el
+                  };
+                  tripResponses.push(response);
+                  
+                  if (index === (tripIDs.length - 1)) {
+                    commit("storePlansID", tripIDs);
+                    commit("storePlans", tripResponses);
+                    localStorage.setItem("newTripIDs", JSON.stringify(tripIDs));
+                    localStorage.setItem(
+                      "newTripPlans",
+                      JSON.stringify(tripResponses)
+                    );
+                    router.push("/trip-plan-response");
+                  }
+                })
+                .catch(error => console.log(error));
+            });
+
+            setTimeout(() => {
+              //
+            }, 2000 * tripIDs.length);
           })
           .catch(error => console.log(error));
       }
-      /* const tripPlansJSON = localStorage.getItem("newTripPlannerPlans");
-      let tripPlans;
-      if (tripPlansJSON !== null) {
-        tripPlans = JSON.parse(tripPlansJSON);
-      } else {
-        tripPlans = [];
-      } */
-      //tripPlans.push(tripPlan);
-      //localStorage.setItem("newTripPlannerPlans", JSON.stringify(tripPlans));
-      //commit("storePlans", tripPlans);
     },
     tryAutoFetchTripPlan({ commit }) {
-      const tripPlansJSON = localStorage.getItem("newTripPlannerPlans");
+      const tripPlansJSON = localStorage.getItem("newTripPlans");
+      const tripIDsJSON = localStorage.getItem("newTripIDs");
+
+      if (tripIDsJSON !== null) {
+        commit("storePlansID", JSON.parse(tripPlansJSON));
+      }
 
       if (tripPlansJSON !== null) {
         commit("storePlans", JSON.parse(tripPlansJSON));
       }
+    },
+    viewTrip({ commit }, payload) {
+      commit("storeViewTripID", payload);
     }
   },
   getters: {
@@ -109,7 +164,16 @@ export default new Vuex.Store({
       return state.userPlans;
     },
     getKey(state) {
-      return state.key
+      return state.key;
+    },
+    getTripIDs(state) {
+      return state.tripIDs;
+    },
+    getIndividualResponse(state) {
+      return state.individualResponse;
+    },
+    getViewTripID(state) {
+      return state.viewTripID;
     }
   }
 });

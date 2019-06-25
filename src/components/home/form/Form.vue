@@ -108,7 +108,6 @@ export default {
         };
 
         this.$store.dispatch("fetchTripPlan", requestData);
-        this.$router.push("/trip-plan-response");
       }
     }
   }

@@ -8,7 +8,7 @@
       <div class="myplans-container" v-else>
         <div v-for="(userPlan, index) of userPlans" :key="index" class="plan">
           <div class="image-container">
-            <img :src="userPlan.tripAttractions[0].images[1]">
+            <img :src="userPlan.response.tripAttractions[0].images[1]">
             <span class="delete-btn">
               <v-btn
                 dark
@@ -16,14 +16,14 @@
                 depressed
                 fab
                 small
-                @click="deletePlan(index)"
+                @click="deletePlan(index, userPlan)"
               >
                 <v-icon large>delete_outline</v-icon>
               </v-btn>
             </span>
           </div>
           <div class="text-center">
-            <button class="btn-text" @click="goToResponse">View Plan &rarr;</button>
+            <button class="btn-text" @click="goToResponse(userPlan.trip_id)">View Plan &rarr;</button>
           </div>
         </div>
       </div>
@@ -33,10 +33,12 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   data() {
     return {
-      userPlans: []
+      userPlans: [],
+      tripIDs: []
     };
   },
   computed: {
@@ -45,17 +47,30 @@ export default {
     }
   },
   created() {
-    this.userPlans = this.$store.getters.getUserPlans;
+    this.userPlans = this.$store.getters.getUserPlans
+    this.tripIDs = this.$store.getters.getTripIDs;
   },
   methods: {
-    deletePlan(index) {
+    deletePlan(index, userPlan) {
       this.userPlans.splice(index, 1);
-      localStorage.setItem("newTripPlannerPlans", this.userPlans);
+
+      const i = this.tripIDs.findIndex(el => el === userPlan.trip_id);
+      this.tripIDs.splice(i, 1);
+
+      localStorage.setItem("newTripPlans", JSON.stringify(this.userPlans));
+      localStorage.setItem("newTripIDs", JSON.stringify(this.tripIDs));
+
+      console.log(this.tripIDs);
+
       if (this.userPlans.length <= 0) {
-        localStorage.removeItem("newTripPlannerPlans");
+        localStorage.removeItem("newTripPlans");
+      }
+      if (this.tripIDs.length <= 0) {
+        localStorage.removeItem("newTripIDs");
       }
     },
-    goToResponse() {
+    goToResponse(tripID) {
+      this.$store.dispatch("viewTrip", tripID)
       this.$router.push("/trip-plan-response");
     }
   }

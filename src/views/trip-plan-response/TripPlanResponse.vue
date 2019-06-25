@@ -1,9 +1,9 @@
 <template>
-  <section class="trip-plan-response">
+  <section class="trip-plan-response" v-if="response !== null">
     <div class="hero">
       <div class="container">
         <div class="hero-text">
-          <h2>{{ response.daysRequired }} Days Travel Plan</h2>
+          <h2>{{ response.days_required }} Days Travel Plan</h2>
           <div>
             <div class="calendar-icon">
               <v-icon color="light-grey" size="3rem">calendar_today</v-icon>
@@ -89,7 +89,7 @@
                   </p>
                 </div>
               </div>
-              <!-- LeafletJS emed map -->
+              <!-- LeafletJS embed map -->
               <div class="trip-drive__map">
                 <img src="./map.png" alt="Google Map">
               </div>
@@ -114,116 +114,25 @@
 <script>
 import Features from "@/components/home/Features";
 export default {
-  data() {
-    return {
-      response: {
-        daysRequired: "4",
-        tripPeriod: "Jan 24 to Jan 28, 2019",
-        orig: "Kathmandu",
-        dest: "Pokhara",
-        tripAttractions: [
-          {
-            title: "Bouddha",
-            date: "Jan 24",
-            strtTime: "8 am",
-            endTime: "1 pm",
-            hrDmd: "4",
-            images: [
-              "https://www.newtripplanner.com/blog/content/images/2019/02/Syambhu.jpg",
-              "https://www.newtripplanner.com/blog/content/images/size/w1000/2019/02/Bhaktapur-durbar-Square.jpg",
-              "https://www.newtripplanner.com/blog/content/images/2019/02/Kathmandu-Durbar-Square.jpg"
-            ],
-            text:
-              "Bouddha is the ancient buddhist stupa and one of the UNESCO Heritage Site located in Kathmandu Valley."
-          },
-          {
-            title: "Swayambhunath",
-            date: "Jan 24",
-            strtTime: "2 pm",
-            endTime: "5 pm",
-            hrDmd: "4",
-            images: [
-              "https://www.newtripplanner.com/blog/content/images/2019/02/Syambhu.jpg",
-              "https://www.newtripplanner.com/blog/content/images/size/w1000/2019/02/Bhaktapur-durbar-Square.jpg",
-              "https://www.newtripplanner.com/blog/content/images/2019/02/Kathmandu-Durbar-Square.jpg"
-            ],
-            text:
-              "Syambhunath is the ancient buddhist stupa and one of the UNESCO Heritage Site located in Kathmandu Valley."
-          },
-          {
-            driveFrom: "Kathmandu",
-            driveTo: "Chitwan",
-            driveBy: "Drive",
-            date: "Jan 25",
-            strtTime: "7 am",
-            endTime: "10 am",
-            hrsDmd: "4"
-          },
-          {
-            title: "Chitwan National Park",
-            date: "Jan 25",
-            strtTime: "12 pm",
-            endTime: "5 pm",
-            hrDmd: "4",
-            images: [
-              "https://www.newtripplanner.com/blog/content/images/2019/02/ABC.jpg",
-              "https://www.newtripplanner.com/blog/content/images/2019/02/Tilicho-lake.jpg",
-              "https://www.newtripplanner.com/blog/content/images/size/w1000/2019/01/lake-tilicho.jpg"
-            ],
-            text: "Chitwan National Park is one of the ancient national park."
-          },
-          {
-            title: "Sauraha",
-            date: "Jan 26",
-            strtTime: "9 am",
-            endTime: "5 pm",
-            hrDmd: "4",
-            images: [
-              "https://www.newtripplanner.com/blog/content/images/2019/02/ABC.jpg",
-              "https://www.newtripplanner.com/blog/content/images/2019/02/Tilicho-lake.jpg",
-              "https://www.newtripplanner.com/blog/content/images/size/w1000/2019/01/lake-tilicho.jpg"
-            ],
-            text: "Sauraha is the destination full of natural beauty."
-          },
-          {
-            driveFrom: "Chitwan",
-            driveTo: "Pokhara",
-            driveBy: "Drive",
-            date: "Jan 27",
-            strtTime: "9 am",
-            endTime: "5 pm",
-            hrsDmd: "4"
-          },
-          {
-            title: "Lake Phewa",
-            date: "Jan 28",
-            strtTime: "6 am",
-            endTime: "12 pm",
-            hrDmd: "4",
-            images: [
-              "https://www.newtripplanner.com/blog/content/images/2019/02/ABC.jpg",
-              "https://www.newtripplanner.com/blog/content/images/2019/02/Tilicho-lake.jpg",
-              "https://www.newtripplanner.com/blog/content/images/size/w1000/2019/01/lake-tilicho.jpg"
-            ],
-            text: "Phewa Lake is one of the beautiful places in Nepal."
-          },
-          {
-            title: "Sarangkot",
-            date: "Jan 28",
-            strtTime: "1 pm",
-            endTime: "5 pm",
-            hrDmd: "4",
-            images: [
-              "https://www.newtripplanner.com/blog/content/images/2019/02/ABC.jpg",
-              "https://www.newtripplanner.com/blog/content/images/2019/02/Tilicho-lake.jpg",
-              "https://www.newtripplanner.com/blog/content/images/size/w1000/2019/01/lake-tilicho.jpg"
-            ],
-            text:
-              "Sarangkot is one of the most fascinating destination in Pokhara."
+  computed: {
+    response() {
+      const tripID = this.$store.getters.getViewTripID;
+      if (tripID !== null) {
+        const tripPlans = JSON.parse(localStorage.getItem("newTripPlans"));
+        let res;
+        tripPlans.forEach(el => {
+          if (el.trip_id === tripID) {
+            res = el.response;
           }
-        ]
+        });
+        return res;
+      } else {
+        if (this.$store.getters.getIndividualResponse !== null) {
+          return this.$store.getters.getIndividualResponse;
+        }
+        this.$router.push("/");
       }
-    };
+    }
   },
   components: {
     appFeatures: Features
@@ -762,7 +671,6 @@ export default {
 
       .response-box {
         .trip-attraction-box {
-
           .trip-attraction__info {
             .response__title {
               font-size: 1.8rem;
