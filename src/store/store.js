@@ -91,6 +91,7 @@ export default new Vuex.Store({
           })
           .catch(error => console.log(error));
       } else {
+        console.log(formData);
         axios
           .post("/create-trip", formData)
           .then(res => {

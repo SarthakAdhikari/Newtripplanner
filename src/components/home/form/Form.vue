@@ -7,7 +7,9 @@
       v-model="tripOrig"
       :error-messages="tripOrigErrors"
       @blur="$v.tripOrig.$touch()"
-      required
+      ref="tripOrigAutoComplete"
+      class="search-location"
+      id="tripOrig"
     ></v-text-field>
     <v-text-field
       label="Trip destination"
@@ -15,7 +17,9 @@
       v-model="tripDest"
       :error-messages="tripDestErrors"
       @blur="$v.tripDest.$touch()"
-      required
+      ref="tripDestAutoComplete"
+      id="tripDest"
+      class="search-location"
     ></v-text-field>
     <app-dialog @dataFromDialog="saveDataFromDialog"></app-dialog>
     <v-layout v-if="showSubmitBtn">
@@ -42,6 +46,29 @@ export default {
       travelMode: "",
       showSubmitBtn: false
     };
+  },
+  mounted() {
+    function removePlaceholder(id) {
+      document.getElementById(id).placeholder = "";
+    }
+    const tripOrigAutoComplete = new google.maps.places.Autocomplete(
+      this.$refs.tripOrigAutoComplete.$refs.input,
+      { types: ["geocode"] }
+    );
+
+    tripOrigAutoComplete.addListener("place_changed", () => {
+      this.tripOrig = tripOrigAutoComplete.getPlace().formatted_address;
+    });
+    removePlaceholder("tripOrig");
+
+    const tripDestAutoComplete = new google.maps.places.Autocomplete(
+      this.$refs.tripDestAutoComplete.$refs.input,
+      { types: ["geocode"] }
+    );
+    tripDestAutoComplete.addListener("place_changed", () => {
+      this.tripDest = tripDestAutoComplete.getPlace().formatted_address;
+    });
+    removePlaceholder("tripDest");
   },
   components: {
     appDatepicker: Datepicker,

@@ -9,6 +9,9 @@
           v-model="newDestiny"
           prepend-icon="place"
           :error-messages="addDestinyError"
+          ref="midDestAutoComplete"
+          id="midDest"
+          class="search-location"
           required
         ></v-text-field>
         <v-btn @click="addDestiny" dark color="primary white--text" depressed fab small>
@@ -41,8 +44,18 @@ import { required } from "vuelidate/lib/validators";
 export default {
   data() {
     return {
-      newDestiny: "",
+      newDestiny: ""
     };
+  },
+  mounted() {
+    const midDestAutoComplete = new google.maps.places.Autocomplete(
+      this.$refs.midDestAutoComplete.$refs.input,
+      { types: ["geocode"] }
+    );
+    midDestAutoComplete.addListener("place_changed", () => {
+      this.newDestiny = midDestAutoComplete.getPlace().formatted_address;
+    });
+    this.$refs.midDestAutoComplete.$refs.input.placeholder= "";
   },
   validations: {
     newDestiny: {
@@ -62,10 +75,10 @@ export default {
     addDestiny() {
       if (this.newDestiny !== "") {
         this.$store.state.midDestinations.push({
-          "cty_nm": this.newDestiny,
-          "orig": "N",
-          "middle": "Y",
-          "dest": "N"
+          cty_nm: this.newDestiny,
+          orig: "N",
+          middle: "Y",
+          dest: "N"
         });
         this.$v.newDestiny.$reset();
         this.newDestiny = "";

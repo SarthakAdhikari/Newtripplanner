@@ -27,6 +27,9 @@
                 v-model="tripOrig"
                 :error-messages="tripOrigErrors"
                 @blur="$v.tripOrig.$touch()"
+                ref="tripOrigAutoComplete"
+                class="search-location"
+                id="tripOrig"
               ></v-text-field>
               <v-text-field
                 label="Trip destination"
@@ -34,6 +37,9 @@
                 v-model="tripDest"
                 :error-messages="tripDestErrors"
                 @blur="$v.tripDest.$touch()"
+                ref="tripDestAutoComplete"
+                id="tripDest"
+                class="search-location"
               ></v-text-field>
 
               <!-- Add Destinations -->
@@ -41,11 +47,7 @@
 
               <!-- Travel Modes -->
               <v-layout wrap>
-                <v-select
-                  v-model="travelMode"
-                  :items="travelModes"
-                  label="Travel Mode"
-                ></v-select>
+                <v-select v-model="travelMode" :items="travelModes" label="Travel Mode"></v-select>
               </v-layout>
 
               <!-- Expansion Panel -->
@@ -209,6 +211,29 @@ export default {
       advRtg: 5,
       rndRtg: 5
     };
+  },
+  mounted() {
+    function removePlaceholder(id) {
+      document.getElementById(id).placeholder = "";
+    }
+    const tripOrigAutoComplete = new google.maps.places.Autocomplete(
+      this.$refs.tripOrigAutoComplete.$refs.input,
+      { types: ["geocode"] }
+    );
+
+    tripOrigAutoComplete.addListener("place_changed", () => {
+      this.tripOrig = tripOrigAutoComplete.getPlace().formatted_address;
+    });
+    removePlaceholder("tripOrig")
+
+    const tripDestAutoComplete = new google.maps.places.Autocomplete(
+      this.$refs.tripDestAutoComplete.$refs.input,
+      { types: ["geocode"] }
+    );
+    tripDestAutoComplete.addListener("place_changed", () => {
+      this.tripDest = tripDestAutoComplete.getPlace().formatted_address;
+    });
+    removePlaceholder("tripDest")
   },
   validations: {
     travelMode: {
